@@ -1,28 +1,28 @@
-#!/usr/bin/node
-
-const request = require('request');
-
-const filmNum = process.argv[2] + '/';
-const filmURL = 'https://swapi-api.hbtn.io/api/films/';
-
-// Makes an API request to get film information
-request(filmURL + filmNum, async function (err, res, body) {
-  if (err) return console.error(err);
-
-  // Parse the response body to get the list of character URLs
-  const charURLList = JSON.parse(body).characters;
-
-  // Iterare through the character URLs and fect character information
-  // Make a request to each character URL
-  for (const charURL of charURLList) {
-    await new Promise(function (resolve, reject) {
-      request(charURL, function (err, res, body) {
-        if (err) return console.error(err);
-
-        // Parse the charcter nformation and print the character's name Resolve the promise to indicate completion
-        console.log(JSON.parse(body).name);
-        resolve();
-      });
-    });
-  }
-});
+{
+	"name": "R2-D2",
+	"height": "96",
+	"mass": "32",
+	"hair_color": "n/a",
+	"skin_color": "white, blue",
+	"eye_color": "red",
+	"birth_year": "33BBY",
+	"gender": "n/a",
+	"homeworld": "https://swapi-api.alx-tools.com/api/planets/8/",
+	"films": [
+		"https://swapi-api.alx-tools.com/api/films/1/",
+		"https://swapi-api.alx-tools.com/api/films/2/",
+		"https://swapi-api.alx-tools.com/api/films/3/",
+		"https://swapi-api.alx-tools.com/api/films/4/",
+		"https://swapi-api.alx-tools.com/api/films/5/",
+		"https://swapi-api.alx-tools.com/api/films/6/",
+		"https://swapi-api.alx-tools.com/api/films/7/"
+	],
+	"species": [
+		"https://swapi-api.alx-tools.com/api/species/2/"
+	],
+	"vehicles": [],
+	"starships": [],
+	"created": "2014-12-10T15:11:50.376000Z",
+	"edited": "2014-12-20T21:17:50.311000Z",
+	"url": "https://swapi-api.alx-tools.com/api/people/3/"
+}
