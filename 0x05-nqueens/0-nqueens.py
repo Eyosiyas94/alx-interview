@@ -1,100 +1,86 @@
 #!/usr/bin/python3
-"""N Queens placement on NxN chessboard"""
-
-
+"""
+The N queens puzzle
+"""
 import sys
 
 
-def generate_solutions(row, column):
-    """
-    solve a simple N x N matrix
-    Args:
-        row (int): Number of rows
-        column (int): Number of columns
-    Returns:
-        returns a list of lists
-    """
-    solution = [[]]
-    for queen in range(row):
-        solution = place_queen(queen, column, solution)
-    return solution
+def is_safe(board, row, col, N):
+    # Check if the current position is safe for a queen
+    # Check the row
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+
+    # Check the upper diagonal
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+
+    # Check the lower diagonal
+    for i, j in zip(range(row, N, 1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+
+    return True
 
 
-def place_queen(queen, column, prev_solution):
-    """
-    Place the queen at a certain position
-    Args:
-        queen (int): The queen
-        column (int): The column to move
-        prev_solution (list): the previous move
-    Returns:
-        returns a list
-    """
-    safe_position = []
-    for array in prev_solution:
-        for x in range(column):
-            if is_safe(queen, x, array):
-                safe_position.append(array + [x])
-    return safe_position
+def solve_nqueens(N):
+    board = [[0] * N for _ in range(N)]
+    solutions = []
+    solve_util(board, 0, N, solutions)
+    return solutions
 
 
-def is_safe(q, x, array):
-    """
-    check if it's safe to make a move
-    Args:
-        q (int): row to move to
-        x (int): column to move to
-        array (array): the matrix
-    Returns:
-        returns a boolean
-    """
-    if x in array:
-        return (False)
-    else:
-        return all(abs(array[column] - x) != q - column
-                   for column in range(q))
+def solve_util(board, col, N, solutions):
+    if col >= N:
+        solution = []
+        for i in range(N):
+            row_str = ""
+            for j in range(N):
+                if board[i][j] == 1:
+                    row_str += "Q"
+                else:
+                    row_str += "."
+            solution.append(row_str)
+        solutions.append(solution)
+        return True
+
+    for i in range(N):
+        if is_safe(board, i, col, N):
+            board[i][col] = 1
+
+            solve_util(board, col + 1, N, solutions)
+
+            board[i][col] = 0
+
+    return False
 
 
-def init():
-    """
-    Lets initialize the game shall we?
-    Args:
-        this function doesn't take any args
-    Returns:
-        returns an integer
-    """
+def print_solutions(solutions):
+    for solution in solutions:
+        for row in solution:
+            print(row)
+        print()
+
+
+if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
-    if sys.argv[1].isdigit():
-        n = int(sys.argv[1])
-    else:
+
+    try:
+        N = int(sys.argv[1])
+    except ValueError:
         print("N must be a number")
         sys.exit(1)
-    if n < 4:
+
+    if N < 4:
         print("N must be at least 4")
         sys.exit(1)
-    return (n)
 
-
-def n_queens():
-    """
-    The main entry point
-    Args:
-        can be called without passing args
-    Returns:
-        returns None
-    Example
-    -----------------------
-    """
-    n = init()
-    solutions = generate_solutions(n, n)
-    for array in solutions:
-        clean = []
-        for q, x in enumerate(array):
-            clean.append([q, x])
-        print(clean)
-
-
-if __name__ == '__main__':
-    n_queens()
+    solutions = solve_nqueens(N)
+    for solution in solutions:
+        for row in solution:
+            print(row)
+        print()
